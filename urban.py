@@ -49,9 +49,8 @@ class UrbanDictBot(Plugin):
             data = await response.json()
 
         # Handle result
-        result = await response.json()
-        self.log.debug(f"Result: {result}")
-        result_list = result['list']
+        self.log.debug(f"Result: {data}")
+        result_list = data['list']
 
         # Quit if result is empty
         if not result_list:
