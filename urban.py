@@ -75,28 +75,10 @@ class UrbanDictBot(Plugin):
         text = " ".join(definition['definition'].split())
         text = self.truncate(text)
 
-        content = TextMessageEventContent(
-            msgtype = MessageType.NOTICE,
-            body = self.get_output_plaintext(word, text, link, index),
-            format = Format.HTML,
-            formatted_body = self.get_output_html(word, text, link, index)
-        )
-
-        await event.respond(content)
+        # respond with result (include index if present)
+        await event.respond(f"**{word}**" + ( f" [{index}]" if index else "") + f": {text} ([link]({link}))")
 
     def truncate(self, text: str, length: int = 1000) -> str:
         if len(text) <= length:
             return text
         return text[:length].rsplit(' ', 1)[0] + '..'
-
-    def get_output_plaintext(self, word: str, text: str, link: str, index: int) -> str:
-        if index:
-            return f"{word} [{index}]: {text} ({link})"
-        else:
-            return f"{word}: {text} ({link})"
-
-    def get_output_html(self, word: str, text: str, link: str, index: int) -> str:
-        if index:
-            return f"<strong>{word}</strong> [{index}]: {text} (<a href='{link}'>link</a>)"
-        else:
-            return f"<strong>{word}</strong>: {text} (<a href='{link}'>link</a>)"
